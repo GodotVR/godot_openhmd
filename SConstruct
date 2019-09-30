@@ -126,15 +126,16 @@ env.Append(CPPFLAGS=["-DOHMD_STATIC"])
 # We don't include android because we're not compiling this for android at this time.
 # Our native mobile VR class already handles android.
 # We do include the Vive so we have basic native support even though we have an OpenVR implementation
-env.Append(CFLAGS=["-DDRIVER_OCULUS_RIFT"])
-env.Append(CFLAGS=["-DDRIVER_DEEPOON"])
-env.Append(CFLAGS=["-DDRIVER_HTC_VIVE"])
-env.Append(CFLAGS=["-DDRIVER_PSVR"])
-env.Append(CFLAGS=["-DDRIVER_NOLO"])
-env.Append(CFLAGS=["-DOPENHMD_DRIVER_WMR"])
 env.Append(CFLAGS=["-DDRIVER_XGVR"])
-#env.Append(CFLAGS=["-DDRIVER_EXTERNAL"])
 #env.Append(CFLAGS=["-DDRIVER_ANDROID"])
+env.Append(CFLAGS=["-DDRIVER_DEEPOON"])
+#env.Append(CFLAGS=["-DDRIVER_EXTERNAL"])
+env.Append(CFLAGS=["-DDRIVER_HTC_VIVE"])
+env.Append(CFLAGS=["-DDRIVER_NOLO"])
+env.Append(CFLAGS=["-DDRIVER_OCULUS_RIFT"])
+env.Append(CFLAGS=["-DDRIVER_PSVR"])
+env.Append(CFLAGS=["-DDRIVER_WMR"])
+env.Append(CFLAGS=["-DDRIVER_VRTEK"])
 
 openhmd_headers = openhmd_path + "include/"
 env.Append(CPPPATH=[openhmd_headers])
@@ -144,7 +145,8 @@ openhmd_sources = [
     "omath.c",
     "openhmd.c",
     "shaders.c",
-    "ext_deps/nxjson.c",
+    "drv_3glasses/packet.c",
+    "drv_3glasses/xgvr.c",
 #    "drv_android/android.c",
     "drv_deepoon/deepoon.c",
     "drv_deepoon/packet.c",
@@ -152,16 +154,19 @@ openhmd_sources = [
 #    "drv_external/external.c",
     "drv_htc_vive/packet.c",
     "drv_htc_vive/vive.c",
+    "drv_nolo/nolo.c",
+    "drv_nolo/packet.c",
     "drv_oculus_rift/packet.c",
+    "drv_oculus_rift/rift-hmd-radio.c",
     "drv_oculus_rift/rift.c",
     "drv_psvr/packet.c",
     "drv_psvr/psvr.c",
-    "drv_nolo/nolo.c",
-    "drv_nolo/packet.c",
+    "drv_vrtek/packet.c",
+    "drv_vrtek/vrtek.c",
     "drv_wmr/wmr.c",
     "drv_wmr/packet.c",
-    "drv_3glasses/xgvr.c",
-    "drv_3glasses/packet.c"
+#    "ext_deps/miniz.c",
+    "ext_deps/nxjson.c",
 ]
 
 sources.append([openhmd_path + "src/" + file for file in openhmd_sources])
