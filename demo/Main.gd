@@ -27,6 +27,9 @@ func _ready():
 		print("Oversample was: " + str(openhmd_config.get_oversample()))
 		openhmd_config.set_oversample(1.5)
 		
+		# make sure our physics engine runs at the correct speed
+		Engine.iterations_per_second = 90
+		
 		# and tell our viewport to render
 		get_viewport().arvr = true
 		
