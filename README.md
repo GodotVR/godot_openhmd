@@ -13,9 +13,13 @@ If you want to build this module for Godot 3.0 please checkout the 3.0 branch.
 
 Building this module
 --------------------
-In order to compile this module you will have to clone the source code to disk. You will need a C/C++ compiler, python and scons installed. This is the same toolchain you will need in order to compile Godot from master. The documentation on Godot is a very good place to read up on this. It is too much information to duplicate here.
+This module uses meson and ninja for building and dependency management.
 
-When cloning this repository make sure you also install all the submodules.
+You can find instructions for installing meson here: https://mesonbuild.com/Quick-guide.html
+
+You can find instructions for installing ninja here: https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages
+
+We do still use submodules to bring our `godot_headers` repository in.
 Either clone with `git clone --recursive` or execute:
 ```
 git submodules init
@@ -23,14 +27,17 @@ git submodules update
 ```
 after cloning.
 
-If you're pulling a newer version (re)execute the `git submodules update` command to make sure the modules are up to date. If you're interested in using different branches of the 3rd party modules just CD into their subfolder and you can execute git commands on those repositories. 
+If you're pulling a newer version (re)execute the `git submodules update` command to make sure the modules are up to date. If you're interested in using different branches of the 3rd party modules just CD into their subfolder and you can execute git commands on those repositories.
 
 *Compiling*
 If everything into place compiling should be pretty straight forward
+```
+meson builddir
+cd builddir
+ninja
+```
 
-For Linux: ```scons platform=linux```
-For OSX: ```scons platform=osx```
-For Windows: ```scons platform=windows```
+Now copy `builddir\subprojects\hidapi\hidapi.dll`, `builddir\subprojects\OpenHMD\openhmd-0.dll` and `builddir\godot_openhmd-0.dll` into `demo\addons\godot-openhmd\bin\win64` (or equivelent step on other platforms), still looking into how to automate this.
 
 License
 -------
@@ -57,9 +64,9 @@ I'm leaving these instructions in the readme file because this is what we do wan
 
 ## X11 (Linux)
 
-Clone this repository using `git clone --recursive` so all the needed packages will be cloned together with the source code. 
+Clone this repository using `git clone --recursive` so all the needed packages will be cloned together with the source code.
 
-After that build libusb, openhmd and hidapi, using the following commands: 
+After that build libusb, openhmd and hidapi, using the following commands:
 
 ```
 export CORES=$(grep processor /proc/cpuinfo | wc -l)
@@ -68,13 +75,13 @@ cd hidapi ; ./bootstrap ; ./configure ; make -j $CORES ; cd ..
 cd OpenHMD ; ./autogen.sh ; ./configure ; make -j $CORES ; cd ..
 ```
 
-To make things easier, set the `GODOT_ROOT` environment variable with the folder that holds the GODOT source code, for example, like this: 
+To make things easier, set the `GODOT_ROOT` environment variable with the folder that holds the GODOT source code, for example, like this:
 
 ```
 export GODOT_ROOT=../godot.git
 ```
 
-The you can build by issuing the followin command: 
+The you can build by issuing the followin command:
 
 ```GODOT_HEADERS=$GODOT_ROOT/modules/gdnative/include/  /bin/scons -j $CORES```
 
@@ -83,7 +90,7 @@ Last, you can test your build by issuing:
 `$GODOT_ROOT/bin/godot.x11.tools.64 demo/project.godot`
 
  or
- 
+
 `godot demo/project.godot`
 
 ## Windows
