@@ -37,6 +37,8 @@ cd builddir
 ninja
 ```
 
+Now copy `builddir\subprojects\hidapi\hidapi.dll`, `builddir\subprojects\OpenHMD\openhmd-0.dll` and `builddir\godot_openhmd-0.dll` into `demo\addons\godot-openhmd\bin\win64` (or equivelent step on other platforms), still looking into how to automate this.
+
 License
 -------
 The source code for the module is released under MIT license (see license file).

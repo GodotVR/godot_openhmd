@@ -8,11 +8,11 @@ reloadable=false
 [entry]
 
 X11.64="res://addons/godot-openhmd/bin/linux/libgodot_openhmd.so"
-Windows.64="res://addons/godot-openhmd/bin/win64/godot_openhmd.dll"
+Windows.64="res://addons/godot-openhmd/bin/win64/godot_openhmd-0.dll"
 OSX="res://addons/godot-openhmd/bin/osx/libgodot_openhmd.dylib"
 
 [dependencies]
 
 X11.64=[  ]
-Windows=[  ]
+Windows=[ "res://addons/godot-openhmd/bin/win64/openhmd-0.dll", "res://addons/godot-openhmd/bin/win64/hidapi.dll" ]
 OSX.64=[  ]

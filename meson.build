@@ -1,13 +1,13 @@
 project(
-	'openhmd_godot', 'c',
+	'godot_openhmd', 'c',
 	default_options: 'c_std=c99',
-	version: '0.1.0',
+	version: '0.1.1',
 	meson_version: '>= 0.44',
 )
-library_version = '0.1.0'
-# cc = meson.get_compiler('c')
+library_version = '0.1.1'
 
 godot_openhmd_path = 'demo/addons/godot-openhmd/bin/'
+
 # Local dependency paths, adapt them to your setup
 godot_glad_path = 'glad' # ARGUMENTS.get("glad", "glad")
 godot_headers_path = 'godot_headers' # ARGUMENTS.get("headers", "godot_headers/")
@@ -17,13 +17,11 @@ include_dirs = ['.', godot_headers_path, godot_glad_path]
 #
 # Dependencies
 #
-# libdl = cc.find_library('dl', required : true)
 
 openhmd_proj = subproject('OpenHMD') # dependency('openhmd', required : true)
 openhmd_dep = openhmd_proj.get_variable('openhmd_dep')
 
 deps = [
-#	libdl,
 	openhmd_dep,
 ]
 
@@ -49,5 +47,6 @@ godot_openhmd_lib = library(
         cpp_args: c_args,
         dependencies: deps,
         install: true,
+				install_dir: godot_openhmd_path,
         version: library_version,
 )
