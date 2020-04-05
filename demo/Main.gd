@@ -32,7 +32,6 @@ func _ready():
 		
 		# and tell our viewport to render
 		get_viewport().arvr = true
-		
 
 
 func _process(delta):

@@ -1,0 +1,5 @@
+[wrap-git]
+directory=OpenHMD
+url=https://github.com/OpenHMD/OpenHMD.git
+push-url=git@github.com:OpenHMD/OpenHMD.git
+revision=master

@@ -9,3 +9,6 @@
 *.lib
 *.obj
 logs
+builddir
+subprojects/*
+!subprojects/*.wrap

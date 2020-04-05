@@ -2,9 +2,12 @@ extends KinematicBody
 # should really change this to Spatial once #17401 is resolved
 
 # Add this scene as a sub scene of your ARVRController node to implement a teleport function on that controller.
-# Then set origin to your ARVROrigin node
 
-export (NodePath) var origin = null
+# Is this active?
+export var enabled = true setget set_enabled, get_enabled
+
+# button 15 is mapped to our trigger
+export var teleport_button = 15
 export (Color) var can_teleport_color = Color(0.0, 1.0, 0.0, 1.0)
 export (Color) var cant_teleport_color = Color(1.0, 0.0, 0.0, 1.0)
 export (Color) var no_collision_color = Color(45.0 / 255.0, 80.0 / 255.0, 220.0 / 255.0, 1.0)
@@ -14,8 +17,12 @@ export var strength = 5.0
 # once this is no longer a kinematic body, we'll need this..
 # export var collision_mask = 1
 
+# We don't know the name of the camera node... 
+export (NodePath) var camera = null
+
 onready var ws = ARVRServer.world_scale
 var origin_node = null
+var camera_node = null
 var is_on_floor = true
 var is_teleporting = false
 var can_teleport = true
@@ -30,6 +37,18 @@ var step_size = 0.5
 # hide the capsule,
 # and add your own player character as child. 
 onready var capsule = get_node("Target/Player_figure/Capsule")
+
+func set_enabled(new_value):
+	enabled = new_value
+	if enabled:
+		# make sure our physics process is on
+		set_physics_process(true)
+	else:
+		# we turn this off in physics process just in case we want to do some cleanup
+		pass
+
+func get_enabled():
+	return enabled
 
 func get_player_height():
 	return player_height
@@ -59,8 +78,8 @@ func set_player_radius(p_radius):
 			capsule.mesh.radius = player_radius
 
 func _ready():
-	# And its parent should be our origin point
-	origin_node = get_node(origin)
+	# We should be a child of an ARVRController and it should be a child or our ARVROrigin
+	origin_node = get_node("../..")
 
 	# It's inactive when we start
 	$Teleport.visible = false
@@ -69,7 +88,14 @@ func _ready():
 	# Scale to our world scale
 	$Teleport.mesh.size = Vector2(0.05 * ws, 1.0)
 	$Target.mesh.size = Vector2(ws, ws)
+	$Target/Player_figure.scale = Vector3(ws, ws, ws)
 	
+	if camera:
+		camera_node = get_node(camera)
+	else:
+		# see if we can find our default
+		camera_node = origin_node.get_node('ARVRCamera')
+
 	# create shape object
 	collision_shape = CapsuleShape.new()
 	
@@ -77,10 +103,26 @@ func _ready():
 	set_player_height(player_height)
 	set_player_radius(player_radius)
 
-
 func _physics_process(delta):
 	# We should be the child or the controller on which the teleport is implemented
 	var controller = get_parent()
+	
+	if !origin_node:
+		return
+	
+	if !camera_node:
+		return
+	
+	# if we're not enabled no point in doing mode
+	if !enabled:
+		# reset these
+		is_teleporting = false;
+		$Teleport.visible = false
+		$Target.visible = false
+		
+		# and stop this from running until we enable again
+		set_physics_process(false)
+		return
 	
 	# check if our world scale has changed..
 	var new_ws = ARVRServer.world_scale
@@ -88,9 +130,9 @@ func _physics_process(delta):
 		ws = new_ws
 		$Teleport.mesh.size = Vector2(0.05 * ws, 1.0)
 		$Target.mesh.size = Vector2(ws, ws)
+		$Target/Player_figure.scale = Vector3(ws, ws, ws)
 	
-	# button 15 is mapped to our trigger
-	if controller and controller.get_is_active() and controller.is_button_pressed(15):
+	if controller and controller.get_is_active() and controller.is_button_pressed(teleport_button):
 		if !is_teleporting:
 			is_teleporting = true
 			$Teleport.visible = true
@@ -209,24 +251,33 @@ func _physics_process(delta):
 
 			$Teleport.get_surface_material(0).set_shader_param("mix_color", color)
 			$Target.get_surface_material(0).albedo_color = color
-			$Target.visible = true
+			$Target.visible = can_teleport
 		else:
 			can_teleport = false
 			$Target.visible = false
 			$Teleport.get_surface_material(0).set_shader_param("mix_color", no_collision_color)
 	elif is_teleporting:
 		if can_teleport:
-			# reset our player position to center
-			ARVRServer.center_on_hmd(true, true)
 			
 			# make our target horizontal again
 			var new_transform = last_target_transform
 			new_transform.basis.y = Vector3(0.0, 1.0, 0.0)
-			new_transform.basis.x = new_transform.basis.y.cross(new_transform.basis.z)
-			new_transform.basis.z = new_transform.basis.x.cross(new_transform.basis.y)
+			new_transform.basis.x = new_transform.basis.y.cross(new_transform.basis.z).normalized()
+			new_transform.basis.z = new_transform.basis.x.cross(new_transform.basis.y).normalized()
 			
-			# and change our location
-			origin_node.global_transform = new_transform
+			# find out our user's feet's transformation
+			var cam_transform = camera_node.transform
+			var user_feet_transform = Transform()
+			user_feet_transform.origin = cam_transform.origin
+			user_feet_transform.origin.y = 0 # the feet are on the ground, but have the same X,Z as the camera
+			
+			# ensure this transform is upright
+			user_feet_transform.basis.y = Vector3(0.0, 1.0, 0.0)
+			user_feet_transform.basis.x = user_feet_transform.basis.y.cross(cam_transform.basis.z).normalized()
+			user_feet_transform.basis.z = user_feet_transform.basis.x.cross(user_feet_transform.basis.y).normalized()
+			
+			# now move the origin such that the new global user_feet_transform would be == new_transform
+			origin_node.global_transform = new_transform * user_feet_transform.inverse()
 		
 		# and disable
 		is_teleporting = false;
