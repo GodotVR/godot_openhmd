@@ -11,10 +11,10 @@
 #define OPENHMD_SHADER_H
 
 #include <glad/glad.h>
+#include <openhmd.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <openhmd.h>
 
 void openhmd_shader_set_device_parameters(ohmd_device *p_device);
 void openhmd_shader_render_eye(GLuint p_texture_id, int p_left_or_right_eye);

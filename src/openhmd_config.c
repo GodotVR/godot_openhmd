@@ -16,7 +16,7 @@ GDCALLINGCONV void openhmd_config_destructor(godot_object *p_instance, void *p_m
 }
 
 GDCALLINGCONV godot_variant openhmd_config_scan_for_devices(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	godot_variant	ret;
+	godot_variant ret;
 
 	if (p_user_data == NULL || openhmd_data != p_user_data) {
 		// this should never ever ever ever happen, just being paranoid....
@@ -87,7 +87,6 @@ GDCALLINGCONV godot_variant openhmd_config_list_devices(godot_object *p_instance
 			api->godot_variant_destroy(&v);
 			api->godot_variant_destroy(&k);
 
-
 			api->godot_variant_new_dictionary(&v, &device_info);
 			api->godot_array_push_back(&devices, &v);
 
@@ -101,10 +100,10 @@ GDCALLINGCONV godot_variant openhmd_config_list_devices(godot_object *p_instance
 	}
 
 	return ret;
-}	
+}
 
 GDCALLINGCONV godot_variant openhmd_config_init_hmd_device(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	godot_variant	ret;
+	godot_variant ret;
 
 	if (p_user_data == NULL || openhmd_data != p_user_data) {
 		// this should never ever ever ever happen, just being paranoid....
@@ -122,7 +121,7 @@ GDCALLINGCONV godot_variant openhmd_config_init_hmd_device(godot_object *p_insta
 };
 
 GDCALLINGCONV godot_variant openhmd_config_close_hmd_device(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	godot_variant	ret;
+	godot_variant ret;
 
 	if (p_user_data == NULL || openhmd_data != p_user_data) {
 		// this should never ever ever ever happen, just being paranoid....
@@ -136,7 +135,7 @@ GDCALLINGCONV godot_variant openhmd_config_close_hmd_device(godot_object *p_inst
 };
 
 GDCALLINGCONV godot_variant openhmd_config_init_tracking_device(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	godot_variant	ret;
+	godot_variant ret;
 
 	if (p_user_data == NULL || openhmd_data != p_user_data) {
 		// this should never ever ever ever happen, just being paranoid....
@@ -154,7 +153,7 @@ GDCALLINGCONV godot_variant openhmd_config_init_tracking_device(godot_object *p_
 };
 
 GDCALLINGCONV godot_variant openhmd_config_close_tracking_device(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	godot_variant	ret;
+	godot_variant ret;
 
 	if (p_user_data == NULL || openhmd_data != p_user_data) {
 		// this should never ever ever ever happen, just being paranoid....
@@ -168,7 +167,7 @@ GDCALLINGCONV godot_variant openhmd_config_close_tracking_device(godot_object *p
 };
 
 GDCALLINGCONV godot_variant openhmd_config_init_controller_device(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	godot_variant	ret;
+	godot_variant ret;
 
 	if (p_user_data == NULL || openhmd_data != p_user_data) {
 		// this should never ever ever ever happen, just being paranoid....

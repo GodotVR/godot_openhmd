@@ -1,17 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////
 // Oculus GDNative module for Godot
 //
-// Written by Bastiaan "Mux213" Olij, 
+// Written by Bastiaan "Mux213" Olij,
 // with loads of help from Thomas "Karroffel" Herzog
 
 #ifndef GODOT_OCULUS_H
 #define GODOT_OCULUS_H
 
-#include "GodotCalls.h"
-#include <openhmd.h>
-#include "openhmd_data.h"
-#include "openhmd_config.h"
 #include "ARVRInterface.h"
+#include "GodotCalls.h"
+#include "openhmd_config.h"
+#include "openhmd_data.h"
+#include <openhmd.h>
 
 // declare our public functions for our ARVR Interface
 

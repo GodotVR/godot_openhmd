@@ -106,5 +106,4 @@ void GDN_EXPORT godot_nativescript_init(void *p_handle) {
 
 		nativescript_api->godot_nativescript_register_method(p_handle, "OpenHMDConfig", "set_oversample", attributes, get_data);
 	}
-
 }

@@ -55,8 +55,8 @@ void openhmd_scan_for_devices() {
 		openhmd_data->num_devices = ohmd_ctx_probe(openhmd_data->ohmd_ctx);
 		if (openhmd_data->num_devices < 0) {
 			printf("OpenHMD: failed to get device count - %s\n", ohmd_ctx_get_error(openhmd_data->ohmd_ctx));
-//		} else {
-//			printf("OpenHMD: found %i devices\n", openhmd_data->num_devices);
+			//		} else {
+			//			printf("OpenHMD: found %i devices\n", openhmd_data->num_devices);
 		}
 	}
 }
@@ -70,10 +70,10 @@ int openhmd_device_count() {
 		return 0;
 	} else {
 		return openhmd_data->num_devices;
-	}	
+	}
 }
 
-const char * openhmd_get_device_vendor(int p_device) {
+const char *openhmd_get_device_vendor(int p_device) {
 	static char empty[] = "";
 	if (openhmd_data == NULL) {
 		// Not yet initialised!
@@ -89,7 +89,7 @@ const char * openhmd_get_device_vendor(int p_device) {
 	}
 }
 
-const char * openhmd_get_device_product(int p_device) {
+const char *openhmd_get_device_product(int p_device) {
 	static char empty[] = "";
 	if (openhmd_data == NULL) {
 		// Not yet initialised!
@@ -282,7 +282,7 @@ bool openhmd_init_controller_device(int p_device) {
 				hand = i + 1;
 			}
 
-			sprintf(device_name,"%s_%i",ohmd_list_gets(openhmd_data->ohmd_ctx, p_device, OHMD_PRODUCT),i);
+			sprintf(device_name, "%s_%i", ohmd_list_gets(openhmd_data->ohmd_ctx, p_device, OHMD_PRODUCT), i);
 			openhmd_data->controller_tracker_mapping[i].tracker = arvr_api->godot_arvr_add_controller(device_name, hand, true, true);
 
 			printf("OpenHMD: initialized controller %s - %s\n", ohmd_list_gets(openhmd_data->ohmd_ctx, p_device, OHMD_VENDOR), ohmd_list_gets(openhmd_data->ohmd_ctx, p_device, OHMD_PRODUCT));
@@ -305,6 +305,6 @@ void openhmd_set_oversample(float p_new_value) {
 	if (openhmd_data == NULL) {
 		// Not yet initialised!
 	} else {
-		openhmd_data->oversample = p_new_value;		
+		openhmd_data->oversample = p_new_value;
 	}
 }

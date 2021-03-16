@@ -5,8 +5,8 @@
 #define OPENHMD_DATA_H
 
 #include "GodotCalls.h"
-#include <openhmd.h>
 #include "openhmd_shader.h"
+#include <openhmd.h>
 
 #define OPENHMD_MAX_CONTROLLERS 16
 
@@ -34,8 +34,8 @@ openhmd_data_struct *get_openhmd_data();
 void release_openhmd_data();
 void openhmd_scan_for_devices();
 int openhmd_device_count();
-const char * openhmd_get_device_vendor(int p_device);
-const char * openhmd_get_device_product(int p_device);
+const char *openhmd_get_device_vendor(int p_device);
+const char *openhmd_get_device_product(int p_device);
 void openhmd_close_hmd_device();
 bool openhmd_init_hmd_device(int p_device);
 void openhmd_close_tracking_device();
@@ -46,4 +46,3 @@ float openhmd_get_oversample();
 void openhmd_set_oversample(float p_new_value);
 
 #endif /* !OPENHMD_DATA_H */
-

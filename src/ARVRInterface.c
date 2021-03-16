@@ -42,7 +42,7 @@ godot_bool godot_arvr_get_anchor_detection_is_enabled(const void *p_data) {
 	return ret;
 };
 
-void godot_arvr_set_anchor_detection_is_enabled(void *p_data, bool p_enable) {
+void godot_arvr_set_anchor_detection_is_enabled(void *p_data, bool p_enable){
 	// we ignore this, not supported in this interface!
 };
 
@@ -65,7 +65,7 @@ godot_bool godot_arvr_is_initialized(const void *p_data) {
 
 	return ret;
 };
- 
+
 godot_bool godot_arvr_initialize(void *p_data) {
 	godot_bool ret = false;
 
@@ -78,7 +78,7 @@ godot_bool godot_arvr_initialize(void *p_data) {
 		// should we build this once and just remember it? or keep building it like this?
 		openhmd_data->ohmd_settings = ohmd_device_settings_create(openhmd_data->ohmd_ctx);
 
-		// automatic polling of the HMD should always be enabled, will make sure that even when the application can not keep up, 
+		// automatic polling of the HMD should always be enabled, will make sure that even when the application can not keep up,
 		// the tracking will stay correct and not only update per rendered frame.
 
 		int auto_update = 1;
@@ -132,19 +132,19 @@ godot_vector2 godot_arvr_get_render_targetsize(const void *p_data) {
 	if (p_data == NULL || p_data != openhmd_data) {
 		// this should never ever ever ever happen, just being paranoid....
 	} else if (openhmd_data->ohmd_ctx != NULL) {
-			if (openhmd_data->hmd_device != NULL) {
-				// use floats so we can multiply
-				float width = openhmd_data->width;
-				float height = openhmd_data->height;
+		if (openhmd_data->hmd_device != NULL) {
+			// use floats so we can multiply
+			float width = openhmd_data->width;
+			float height = openhmd_data->height;
 
-				width = floor(width * openhmd_data->oversample);
-				height = floor(height * openhmd_data->oversample);
+			width = floor(width * openhmd_data->oversample);
+			height = floor(height * openhmd_data->oversample);
 
-				api->godot_vector2_new(&size, (int) width, (int) height);
-			} else {
-				/* just return something so we can show something instead of crashing */
-				api->godot_vector2_new(&size, 600, 900);
-			};
+			api->godot_vector2_new(&size, (int)width, (int)height);
+		} else {
+			/* just return something so we can show something instead of crashing */
+			api->godot_vector2_new(&size, 600, 900);
+		};
 	};
 
 	return size;
@@ -155,7 +155,7 @@ void openhmd_transform_from_matrix(godot_transform *p_dest, ohmd_device *p_devic
 	if (p_device != NULL) {
 		godot_basis basis;
 		godot_vector3 origin;
-		float *basis_ptr = (float *) &basis; // Godot can switch between real_t being double or float.. which one is used...
+		float *basis_ptr = (float *)&basis; // Godot can switch between real_t being double or float.. which one is used...
 		float m[4][4];
 
 		ohmd_device_getf(p_device, p_type, (float *)m);
@@ -170,7 +170,7 @@ void openhmd_transform_from_matrix(godot_transform *p_dest, ohmd_device *p_devic
 		api->godot_vector3_new(&origin, m[0][3] * p_world_scale, m[1][3] * p_world_scale, m[2][3] * p_world_scale);
 		api->godot_transform_new(p_dest, &basis, &origin);
 	} else {
-		api->godot_transform_new_identity(p_dest);		
+		api->godot_transform_new_identity(p_dest);
 	};
 };
 
@@ -192,7 +192,7 @@ void openhmd_transform_from_rot_pos(godot_transform *p_dest, ohmd_device *p_devi
 		api->godot_vector3_new(&origin, ohmd_v[0] * p_world_scale, ohmd_v[1] * p_world_scale, ohmd_v[2] * p_world_scale);
 		api->godot_transform_new(p_dest, &basis, &origin);
 	} else {
-		api->godot_transform_new_identity(p_dest);		
+		api->godot_transform_new_identity(p_dest);
 	};
 };
 
@@ -209,7 +209,7 @@ godot_transform godot_arvr_get_transform_for_eye(void *p_data, godot_int p_eye, 
 	} else if (openhmd_data->ohmd_ctx != NULL) {
 		if (openhmd_data->tracking_device != NULL) {
 			godot_transform hmd_transform;
-			
+
 			// Our tracker will only have location and position data, OHMD_LEFT_EYE_GL_MODELVIEW_MATRIX and OHMD_RIGHT_EYE_GL_MODELVIEW_MATRIX would return the same thing
 			openhmd_transform_from_rot_pos(&hmd_transform, openhmd_data->tracking_device, world_scale);
 
@@ -281,7 +281,7 @@ void godot_arvr_fill_projection_for_eye(void *p_data, godot_real *p_projection, 
 };
 
 void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye, godot_rid *p_render_target, godot_rect2 *p_screen_rect) {
-	// This function is responsible for outputting the final render buffer for each eye. 
+	// This function is responsible for outputting the final render buffer for each eye.
 	// p_screen_rect will only have a value when we're outputting to the main viewport.
 
 	// For an interface that must output to the main viewport (such as with mobile VR) we should give an error when p_screen_rect is not set
@@ -300,8 +300,7 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye, godot_rid *p_rende
 		};
 		*/
 
-//		arvr_api->godot_arvr_blit(p_eye, p_render_target, p_screen_rect);
-
+		//		arvr_api->godot_arvr_blit(p_eye, p_render_target, p_screen_rect);
 
 		///@TODO we should set our output to the window we opened for our HMD. For now, just output to our main window
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -326,7 +325,6 @@ void godot_arvr_process(void *p_data) {
 				openhmd_transform_from_rot_pos(&controller_transform, openhmd_data->controller_tracker_mapping[i].device, 1.0);
 				arvr_api->godot_arvr_set_controller_transform(openhmd_data->controller_tracker_mapping[i].tracker, &controller_transform, true, true);
 
-
 				// Set controller buttons
 				int control_count = 0;
 				ohmd_device_geti(openhmd_data->controller_tracker_mapping[i].device, OHMD_CONTROL_COUNT, &control_count);
@@ -337,8 +335,7 @@ void godot_arvr_process(void *p_data) {
 				int control_function[64];
 				ohmd_device_geti(openhmd_data->controller_tracker_mapping[i].device, OHMD_CONTROLS_HINTS, control_function);
 
-				for(int j = 0; j < control_count; j++)
-				{
+				for (int j = 0; j < control_count; j++) {
 					int button = 0;
 					if (control_function[j] == OHMD_TRIGGER_CLICK)
 						button = 15;
@@ -352,7 +349,7 @@ void godot_arvr_process(void *p_data) {
 						arvr_api->godot_arvr_set_controller_button(openhmd_data->controller_tracker_mapping[i].tracker, button, false);
 				}
 			};
-		};		
+		};
 	};
 };
 
