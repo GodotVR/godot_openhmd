@@ -4,7 +4,7 @@
 
   There is a big question whether, and how much, of this code should be in
   OpenHMD itself or how much of it we should piggy back onto Godots shader
-  logic. 
+  logic.
 **/
 
 #ifndef OPENHMD_SHADER_H

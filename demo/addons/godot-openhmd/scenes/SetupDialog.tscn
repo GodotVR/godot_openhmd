@@ -1,0 +1,153 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/pt_sans_24pt.tres" type="DynamicFont" id=1]
+[ext_resource path="res://addons/godot-openhmd/scenes/SetupDialog.gd" type="Script" id=2]
+
+[node name="SetupDialog" type="PopupDialog"]
+pause_mode = 2
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -375.0
+margin_top = -125.0
+margin_right = 375.0
+margin_bottom = 175.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Container" type="VBoxContainer" parent="."]
+margin_left = 5.0
+margin_top = 10.0
+margin_right = 740.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HMD" type="HBoxContainer" parent="Container"]
+margin_right = 735.0
+margin_bottom = 38.0
+
+[node name="Label" type="Label" parent="Container/HMD"]
+margin_top = 3.0
+margin_right = 150.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 150, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "HMD:"
+align = 2
+
+[node name="Devices" type="OptionButton" parent="Container/HMD"]
+margin_left = 154.0
+margin_right = 245.0
+margin_bottom = 38.0
+custom_fonts/font = ExtResource( 1 )
+text = "Select"
+
+[node name="Tracker" type="HBoxContainer" parent="Container"]
+margin_top = 42.0
+margin_right = 735.0
+margin_bottom = 80.0
+
+[node name="Label" type="Label" parent="Container/Tracker"]
+margin_top = 3.0
+margin_right = 150.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 150, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "Tracker:"
+align = 2
+
+[node name="Devices" type="OptionButton" parent="Container/Tracker"]
+margin_left = 154.0
+margin_right = 245.0
+margin_bottom = 38.0
+custom_fonts/font = ExtResource( 1 )
+text = "Select"
+
+[node name="Controller1" type="HBoxContainer" parent="Container"]
+margin_top = 84.0
+margin_right = 735.0
+margin_bottom = 122.0
+
+[node name="Label" type="Label" parent="Container/Controller1"]
+margin_top = 3.0
+margin_right = 150.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 150, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "Controller 1:"
+align = 2
+
+[node name="Devices" type="OptionButton" parent="Container/Controller1"]
+margin_left = 154.0
+margin_right = 245.0
+margin_bottom = 38.0
+custom_fonts/font = ExtResource( 1 )
+text = "Select"
+
+[node name="Controller2" type="HBoxContainer" parent="Container"]
+margin_top = 126.0
+margin_right = 735.0
+margin_bottom = 164.0
+
+[node name="Label" type="Label" parent="Container/Controller2"]
+margin_top = 3.0
+margin_right = 150.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 150, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "Controller 2	:"
+align = 2
+
+[node name="Devices" type="OptionButton" parent="Container/Controller2"]
+margin_left = 154.0
+margin_right = 245.0
+margin_bottom = 38.0
+custom_fonts/font = ExtResource( 1 )
+text = "Select"
+
+[node name="Oversample" type="HBoxContainer" parent="Container"]
+margin_top = 168.0
+margin_right = 735.0
+margin_bottom = 200.0
+
+[node name="Label" type="Label" parent="Container/Oversample"]
+margin_right = 150.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 150, 0 )
+custom_fonts/font = ExtResource( 1 )
+text = "Oversample:	"
+align = 2
+
+[node name="SpinBox" type="SpinBox" parent="Container/Oversample"]
+margin_left = 154.0
+margin_right = 228.0
+margin_bottom = 32.0
+min_value = 1.0
+max_value = 2.0
+step = 0.1
+value = 1.5
+align = 1
+
+[node name="Init" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -33.5
+margin_top = -53.0
+margin_right = 33.5
+margin_bottom = -15.0
+custom_fonts/font = ExtResource( 1 )
+text = "Init"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="about_to_show" from="." to="." method="_on_SetupDialog_about_to_show"]
+[connection signal="popup_hide" from="." to="." method="_on_SetupDialog_popup_hide"]
+[connection signal="pressed" from="Init" to="." method="_on_Init_pressed"]
