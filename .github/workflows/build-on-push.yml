@@ -86,7 +86,7 @@ jobs:
         run: |
           mkdir addons
           cp -r godot_openhmd/demo/addons/godot-openhmd addons
-          REM cp build-files-linux/libgodot_openhmd.so addons/godot-openhmd/bin/linux/libgodot_openhmd.so
+          # cp build-files-linux/libgodot_openhmd.so addons/godot-openhmd/bin/linux/libgodot_openhmd.so
           cp build-files-windows/demo/addons/godot-openhmd/bin/win64/libgodot_openhmd.dll addons/godot-openhmd/bin/win64/libgodot_openhmd.dll
       - name: Calculate GIT short ref
         run: |
@@ -95,12 +95,12 @@ jobs:
           cd ..
       - name: Clean up extracted files
         run: |
-          REM rm -rf build-files-linux
+          # rm -rf build-files-linux
           rm -rf build-files-windows
           rm -rf godot_openhmd
           rm -rf .git
           rm addons/godot-openhmd/bin/win64/.gitignore
-          REM rm addons/godot-openhmd/bin/linux/.gitignore
+          # rm addons/godot-openhmd/bin/linux/.gitignore
       - name: Zip asset
         run: |
           zip -qq -r godot-openhmd.zip .
