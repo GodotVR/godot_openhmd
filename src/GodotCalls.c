@@ -32,7 +32,8 @@ void GDN_EXPORT godot_gdnative_init(godot_gdnative_init_options *p_options) {
 					printf("Native script API version %i.%i isn't supported, need version 1.0 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
 				}
 			}; break;
-			default: break;
+			default:
+				break;
 		};
 	};
 

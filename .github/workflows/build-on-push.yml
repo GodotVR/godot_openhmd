@@ -1,0 +1,128 @@
+
+# Workflow to automatically compile a Linux/Windows library on commit/push
+name: Build on push
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events, but only for the master branch we'll create .zip files
+on:
+  [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job builds the plugin for our target platforms
+  build:
+    name: Building for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          #- os: ubuntu-20.04
+          #  platform: linux
+          - os: windows-latest
+            platform: windows
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Install scons (Ubuntu)
+      run: |
+        sudo apt install scons
+      if: matrix.os == 'ubuntu-20.04'
+
+    - name: Install scons (Windows)
+      run: |
+        pip install scons
+      if: matrix.os == 'windows-latest'
+
+    - name: Run the build for godot_openhmd
+      run: |
+        cd $GITHUB_WORKSPACE
+        scons platform=${{ matrix.platform }} -j2 target=release bits=64
+      if: matrix.os != 'windows-latest'
+
+    - name: Run the build for godot_openhmd (Windows)
+      run: |
+        cd ${env:GITHUB_WORKSPACE}
+        scons platform=${{ matrix.platform }} -j2 target=release bits=64
+      if: matrix.os == 'windows-latest'
+
+    - name: Upload build files (artifacts) (Linux)
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-files-linux
+        path: |
+          demo/addons/godot-openhmd/bin/linux/libgodot_openhmd.so
+      if: matrix.os == 'ubuntu-20.04'
+
+    - name: Upload build files (artifacts) (Windows)
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-files-windows
+        path: |
+          demo/addons/godot-openhmd/bin/win64/libgodot_openhmd.dll
+      if: matrix.os == 'windows-latest'
+
+  # This job collects the build output and assembles the final asset (artifact)
+  asset:
+    name: Assembling the asset (artifact)
+    runs-on: ubuntu-20.04
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: 'GodotVR/godot_openhmd'
+          path: godot_openhmd
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+      - name: Copy files to destination
+        run: |
+          mkdir addons
+          cp -r godot_openhmd/demo/addons/godot-openhmd addons
+          REM cp build-files-linux/libgodot_openhmd.so addons/godot-openhmd/bin/linux/libgodot_openhmd.so
+          cp build-files-windows/demo/addons/godot-openhmd/bin/win64/libgodot_openhmd.dll addons/godot-openhmd/bin/win64/libgodot_openhmd.dll
+      - name: Calculate GIT short ref
+        run: |
+          cd godot_openhmd
+          echo "GITHUB_SHA_SHORT=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+          cd ..
+      - name: Clean up extracted files
+        run: |
+          REM rm -rf build-files-linux
+          rm -rf build-files-windows
+          rm -rf godot_openhmd
+          rm -rf .git
+          rm addons/godot-openhmd/bin/win64/.gitignore
+          REM rm addons/godot-openhmd/bin/linux/.gitignore
+      - name: Zip asset
+        run: |
+          zip -qq -r godot-openhmd.zip .
+      - name: Create release for asset
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.GITHUB_SHA_SHORT }}
+          release_name: Automatic build for changeset ${{ env.GITHUB_SHA_SHORT }}
+          body: |
+            This is an automated build for changeset ${{ env.GITHUB_SHA_SHORT }}
+          draft: false
+          prerelease: true
+      - name: Upload asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./godot-openhmd.zip
+          asset_name: godot-openhmd.zip
+          asset_content_type: application/zip

@@ -27,6 +27,11 @@ window/vsync/use_vsync=false
 
 singletons=[ "res://addons/godot-openhmd/godot_openhmd.gdnlib" ]
 
+[layer_names]
+
+3d_physics/layer_1="Player"
+3d_physics/layer_2="Environment"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

@@ -270,4 +270,3 @@ void openhmd_shader_cleanup() {
 	glDeleteVertexArrays(1, &openhmd_shader_vao);
 	glDeleteBuffers(1, &openhmd_shader_vbo);
 };
-

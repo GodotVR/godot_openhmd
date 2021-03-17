@@ -17,7 +17,7 @@ platform = ARGUMENTS.get("platform", platform)
 # destination path
 godot_openhmd_path = 'demo/addons/godot-openhmd/bin/'
 
-# This makes sure to keep the session environment variables on windows, 
+# This makes sure to keep the session environment variables on windows,
 # that way you can run scons in a vs 2017 prompt and it will find all the required tools
 env = Environment()
 if platform == "windows":
@@ -133,6 +133,7 @@ env.Append(CFLAGS=["-DDRIVER_DEEPOON"])
 env.Append(CFLAGS=["-DDRIVER_HTC_VIVE"])
 env.Append(CFLAGS=["-DDRIVER_NOLO"])
 env.Append(CFLAGS=["-DDRIVER_OCULUS_RIFT"])
+env.Append(CFLAGS=["-DDRIVER_OCULUS_RIFT_S"])
 env.Append(CFLAGS=["-DDRIVER_PSVR"])
 env.Append(CFLAGS=["-DDRIVER_WMR"])
 env.Append(CFLAGS=["-DDRIVER_VRTEK"])
@@ -159,6 +160,11 @@ openhmd_sources = [
     "drv_oculus_rift/packet.c",
     "drv_oculus_rift/rift-hmd-radio.c",
     "drv_oculus_rift/rift.c",
+    "drv_oculus_rift_s/rift-s-controller.c",
+    "drv_oculus_rift_s/rift-s-firmware.c",
+    "drv_oculus_rift_s/rift-s-protocol.c",
+    "drv_oculus_rift_s/rift-s-radio.c",
+    "drv_oculus_rift_s/rift-s.c",
     "drv_psvr/packet.c",
     "drv_psvr/psvr.c",
     "drv_vrtek/packet.c",
