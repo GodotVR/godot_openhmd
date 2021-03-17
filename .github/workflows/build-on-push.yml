@@ -64,7 +64,7 @@ jobs:
       with:
         name: build-files-windows
         path: |
-          demo/addons/godot-openhmd/bin/win64/libgodot_openhmd.dll
+          demo/addons/godot-openhmd/bin/win64/godot_openhmd.dll
       if: matrix.os == 'windows-latest'
 
   # This job collects the build output and assembles the final asset (artifact)
@@ -87,7 +87,7 @@ jobs:
           mkdir addons
           cp -r godot_openhmd/demo/addons/godot-openhmd addons
           # cp build-files-linux/libgodot_openhmd.so addons/godot-openhmd/bin/linux/libgodot_openhmd.so
-          cp build-files-windows/demo/addons/godot-openhmd/bin/win64/libgodot_openhmd.dll addons/godot-openhmd/bin/win64/libgodot_openhmd.dll
+          cp build-files-windows/demo/addons/godot-openhmd/bin/win64/godot_openhmd.dll addons/godot-openhmd/bin/win64/godot_openhmd.dll
       - name: Calculate GIT short ref
         run: |
           cd godot_openhmd
