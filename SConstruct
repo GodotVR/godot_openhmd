@@ -65,8 +65,9 @@ if platform == "windows":
 sources.append(godot_glad_path + "/glad.c")
 
 ####################################################################################################################################
-# Link in libusb, but for now just for linux
+# Build internal libusb on linux
 if platform == 'linux':
+    env.Append(CPPPATH=["libusb_include"]) # Location of the pre-generated libusb config.h for the internal build
     env.Append(CPPPATH=[libusb_path])
     env.Append(CPPPATH=[libusb_path + "libusb"])
     env.Append(CPPPATH=[libusb_path + "libusb/os"])
@@ -82,26 +83,12 @@ if platform == 'linux':
 
     sources.append([libusb_path + "libusb/" + file for file in libusb_sources])
 
-if platform == 'linux':
-#    sources.append(libusb_path + "libusb/os/linux_netlink.c")
     sources.append(libusb_path + "libusb/os/linux_usbfs.c")
     sources.append(libusb_path + "libusb/os/linux_udev.c")
-    sources.append(libusb_path + "libusb/os/poll_posix.c")
+    sources.append(libusb_path + "libusb/os/events_posix.c")
     sources.append(libusb_path + "libusb/os/threads_posix.c")
     env.Append(CPPDEFINES=["OS_LINUX", "USE_UDEV", "HAVE_LIBUDEV"])
     env.Append(LIBS = ['udev'])
-#elif platform == 'windows':
-#    sources.append(libusb_path + "libusb/os/windows_nt_common.c")
-#    sources.append(libusb_path + "libusb/os/windows_usbdk.c")
-#    sources.append(libusb_path + "libusb/os/windows_winusb.c")
-#    sources.append(libusb_path + "libusb/os/poll_windows.c")
-#    sources.append(libusb_path + "libusb/os/threads_windows.c")
-#    env,Append(CPPDEFINES=["OS_WINDOWS"])
-#elif platform == 'osx':
-#    sources.append(libusb_path + "libusb/os/darwin_usb.c")
-#    sources.append(libusb_path + "libusb/os/poll_posix.c")
-#    sources.append(libusb_path + "libusb/os/threads_posix.c")
-#   env.Append(CPPDEFINES=["OS_DARWIN"])
 
 ####################################################################################################################################
 # Link in hidapi
