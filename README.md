@@ -26,11 +26,14 @@ after cloning.
 If you're pulling a newer version (re)execute the `git submodules update` command to make sure the modules are up to date. If you're interested in using different branches of the 3rd party modules just CD into their subfolder and you can execute git commands on those repositories.
 
 *Compiling*
-If everything into place compiling should be pretty straight forward
+If everything is into place compiling should be pretty straight forward
 
 For Linux: ```scons platform=linux```
 For OSX: ```scons platform=osx```
 For Windows: ```scons platform=windows```
+
+*Dependencies*
+Finally copy the relevant dynammic libraries from the `OpenHMD` folder into `demo/addons/godot-openhmd/bin/<platform>`
 
 License
 -------
@@ -48,44 +51,3 @@ Videos about my work with Godot including tutorials on working with VR in Godot 
 https://www.youtube.com/channel/UCrbLJYzJjDf2p-vJC011lYw
 
 
-
-
-# PARKED FOR NOW... PLEASE IGNORE
-
-The info below shows how to compile each 3rd party library however we currently do not use any of that. The scons file has all compilation instructions for all 3rd party tools.
-I'm leaving these instructions in the readme file because this is what we do want to move too to prevent issues coming from 3rd party modules changing or having special instructions for individual platforms.
-
-## X11 (Linux)
-
-Clone this repository using `git clone --recursive` so all the needed packages will be cloned together with the source code.
-
-After that build libusb, openhmd and hidapi, using the following commands:
-
-```
-export CORES=$(grep processor /proc/cpuinfo | wc -l)
-cd libusb ; ./bootstrap.sh ; ./configure ; make -j $CORES ; cd ..
-cd hidapi ; ./bootstrap ; ./configure ; make -j $CORES ; cd ..
-cd OpenHMD ; ./autogen.sh ; ./configure ; make -j $CORES ; cd ..
-```
-
-To make things easier, set the `GODOT_ROOT` environment variable with the folder that holds the GODOT source code, for example, like this:
-
-```
-export GODOT_ROOT=../godot.git
-```
-
-The you can build by issuing the followin command:
-
-```GODOT_HEADERS=$GODOT_ROOT/modules/gdnative/include/  /bin/scons -j $CORES```
-
-Last, you can test your build by issuing:
-
-`$GODOT_ROOT/bin/godot.x11.tools.64 demo/project.godot`
-
-or
-
-`godot demo/project.godot`
-
-## Windows
-
-## OSX

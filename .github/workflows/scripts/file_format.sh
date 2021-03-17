@@ -21,10 +21,6 @@ while IFS= read -rd '' f; do
         continue
     elif [[ "$f" == "demo/addons/godot-xr-tools"* ]]; then
         continue
-    elif [[ "$f" == "hidapi"* ]]; then
-        continue
-    elif [[ "$f" == "libusb"* ]]; then
-        continue
     elif [[ "$f" == "OpenHMD"* ]]; then
         continue
     elif [[ "$f" == *".gd" ]]; then

@@ -82,8 +82,8 @@ $DELETE_OLD_PATCHES && rm -f /tmp/$prefix*.patch
 # create one patch containing all changes to the files
 git diff-index --cached --diff-filter=ACMR --name-only $against -- | while read file;
 do
-    # ignore thirdparty files
-    if grep -q "thirdparty" <<< $file; then
+    # ignore OpenHMD files
+    if grep -q "OpenHMD" <<< $file; then
         continue;
     fi
 

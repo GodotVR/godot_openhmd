@@ -4,8 +4,6 @@ import os, subprocess
 # Local dependency paths, adapt them to your setup
 godot_glad_path = ARGUMENTS.get("glad", "glad")
 godot_headers_path = ARGUMENTS.get("headers", "godot_headers/")
-libusb_path = ARGUMENTS.get("libusb", os.getenv("LIBUSB_PATH", "libusb/"))
-hidapi_path = ARGUMENTS.get("hidapi", os.getenv("HIDAPI_PATH", "hidapi/"))
 openhmd_path = ARGUMENTS.get("openhmd", os.getenv("OPENHMD_PATH", "OpenHMD/"))
 
 target = ARGUMENTS.get("target", "debug")
@@ -64,110 +62,17 @@ if platform == "windows":
 # Link in glad
 sources.append(godot_glad_path + "/glad.c")
 
-####################################################################################################################################
-# Build internal libusb on linux
-if platform == 'linux':
-    env.Append(CPPPATH=["libusb_include"]) # Location of the pre-generated libusb config.h for the internal build
-    env.Append(CPPPATH=[libusb_path])
-    env.Append(CPPPATH=[libusb_path + "libusb"])
-    env.Append(CPPPATH=[libusb_path + "libusb/os"])
-
-    libusb_sources = [
-        "core.c",
-        "descriptor.c",
-        "hotplug.c",
-        "io.c",
-        "strerror.c",
-        "sync.c"
-    ]
-
-    sources.append([libusb_path + "libusb/" + file for file in libusb_sources])
-
-    sources.append(libusb_path + "libusb/os/linux_usbfs.c")
-    sources.append(libusb_path + "libusb/os/linux_udev.c")
-    sources.append(libusb_path + "libusb/os/events_posix.c")
-    sources.append(libusb_path + "libusb/os/threads_posix.c")
-    env.Append(CPPDEFINES=["OS_LINUX", "USE_UDEV", "HAVE_LIBUDEV"])
-    env.Append(LIBS = ['udev'])
 
 ####################################################################################################################################
-# Link in hidapi
-hidapi_headers = hidapi_path + "hidapi/"
-env.Append(CPPPATH=[hidapi_headers])
+# Link in openhmd, we're linking in dynamic.
+env.Append(CFLAGS=["-DDLL_EXPORT"])
+env.Append(CPPFLAGS=["-DDLL_EXPORT"])
 
-if platform == 'windows':
-    sources.append(hidapi_path + "windows/hid.c" )
-elif platform == 'linux':
-    # If we can use the libusb version it should allow us to undo our detect.py changes
-    # See thirdparty/hidapi/linux/README.txt and thirdparty/hidapi/udev/99-hid-rules for more info
-    # env_openhmd.add_source_files(env.modules_sources, [ "#thirdparty/hidapi/linux/hid.c" ])
-    sources.append(hidapi_path + "libusb/hid.c")
-elif platform == 'osx':
-    sources.append(hidapi_path + "mac/hid.c")
+env.Append(CPPPATH=[ openhmd_path + "include/" ])
+if platform == "windows":
+    env.Append(LIBS=[openhmd_path + "lib/win64/openhmd.lib"])
 
-####################################################################################################################################
-# Link in openhmd, we're linking in static.
-env.Append(CFLAGS=["-DOHMD_STATIC"])
-env.Append(CPPFLAGS=["-DOHMD_STATIC"])
-
-# We don't include android because we're not compiling this for android at this time.
-# Our native mobile VR class already handles android.
-# We do include the Vive so we have basic native support even though we have an OpenVR implementation
-env.Append(CFLAGS=["-DDRIVER_XGVR"])
-#env.Append(CFLAGS=["-DDRIVER_ANDROID"])
-env.Append(CFLAGS=["-DDRIVER_DEEPOON"])
-#env.Append(CFLAGS=["-DDRIVER_EXTERNAL"])
-env.Append(CFLAGS=["-DDRIVER_HTC_VIVE"])
-env.Append(CFLAGS=["-DDRIVER_NOLO"])
-env.Append(CFLAGS=["-DDRIVER_OCULUS_RIFT"])
-env.Append(CFLAGS=["-DDRIVER_OCULUS_RIFT_S"])
-env.Append(CFLAGS=["-DDRIVER_PSVR"])
-env.Append(CFLAGS=["-DDRIVER_WMR"])
-env.Append(CFLAGS=["-DDRIVER_VRTEK"])
-
-openhmd_headers = openhmd_path + "include/"
-env.Append(CPPPATH=[openhmd_headers])
-
-openhmd_sources = [
-    "fusion.c",
-    "omath.c",
-    "openhmd.c",
-    "shaders.c",
-    "drv_3glasses/packet.c",
-    "drv_3glasses/xgvr.c",
-#    "drv_android/android.c",
-    "drv_deepoon/deepoon.c",
-    "drv_deepoon/packet.c",
-    "drv_dummy/dummy.c",
-#    "drv_external/external.c",
-    "drv_htc_vive/packet.c",
-    "drv_htc_vive/vive.c",
-    "drv_nolo/nolo.c",
-    "drv_nolo/packet.c",
-    "drv_oculus_rift/packet.c",
-    "drv_oculus_rift/rift-hmd-radio.c",
-    "drv_oculus_rift/rift.c",
-    "drv_oculus_rift_s/rift-s-controller.c",
-    "drv_oculus_rift_s/rift-s-firmware.c",
-    "drv_oculus_rift_s/rift-s-protocol.c",
-    "drv_oculus_rift_s/rift-s-radio.c",
-    "drv_oculus_rift_s/rift-s.c",
-    "drv_psvr/packet.c",
-    "drv_psvr/psvr.c",
-    "drv_vrtek/packet.c",
-    "drv_vrtek/vrtek.c",
-    "drv_wmr/wmr.c",
-    "drv_wmr/packet.c",
-#    "ext_deps/miniz.c",
-    "ext_deps/nxjson.c",
-]
-
-sources.append([openhmd_path + "src/" + file for file in openhmd_sources])
-
-if platform == 'windows':
-    sources.append(openhmd_path + "src/platform-win32.c" )
-else:
-    sources.append(openhmd_path + "src/platform-posix.c" )
+# TODO add other platforms!!
 
 ####################################################################################################################################
 # and add our main project
