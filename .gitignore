@@ -6,6 +6,5 @@
 *.import
 *.dblite
 *.exp
-*.lib
 *.obj
 logs

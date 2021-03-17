@@ -14,5 +14,5 @@ OSX="res://addons/godot-openhmd/bin/macos/libgodot_openhmd.dylib"
 [dependencies]
 
 X11.64=[  ]
-Windows=[  ]
+Windows=[ "res://addons/godot-openhmd/bin/win64/hidapi.dll", "res://addons/godot-openhmd/bin/win64/openhmd-0.dll" ]
 OSX.64=[  ]
