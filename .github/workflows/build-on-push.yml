@@ -87,7 +87,7 @@ jobs:
           mkdir addons
           cp -r godot_openhmd/demo/addons/godot-openhmd addons
           # cp build-files-linux/libgodot_openhmd.so addons/godot-openhmd/bin/linux/libgodot_openhmd.so
-          cp build-files-windows/demo/addons/godot-openhmd/bin/win64/godot_openhmd.dll addons/godot-openhmd/bin/win64/godot_openhmd.dll
+          cp build-files-windows/godot_openhmd.dll addons/godot-openhmd/bin/win64/godot_openhmd.dll
       - name: Calculate GIT short ref
         run: |
           cd godot_openhmd
