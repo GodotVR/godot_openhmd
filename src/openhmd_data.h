@@ -28,7 +28,7 @@ typedef struct openhmd_data_struct {
 	openhmd_controller_tracker controller_tracker_mapping[16];
 } openhmd_data_struct;
 
-openhmd_data_struct *openhmd_data;
+extern openhmd_data_struct *openhmd_data;
 
 openhmd_data_struct *get_openhmd_data();
 void release_openhmd_data();
